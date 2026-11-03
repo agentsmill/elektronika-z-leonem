@@ -1,0 +1,13 @@
+/* mikrofon na własnej stronie: nagranie i rozpoznawanie zostają w tej przeglądarce */
+const Mic={stream:null,rec:null,
+ ok(){return !!(SITE&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)},
+ async open(){if(!this.stream)this.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,channelCount:1}});return this.stream},
+ close(){if(this.stream){this.stream.getTracks().forEach(t=>t.stop());this.stream=null}},
+ async record(ms,level){Snd.init();const c=Snd.ctx,st=await this.open(),src=c.createMediaStreamSource(st),sp=c.createScriptProcessor(4096,1,1),mute=c.createGain(),chunks=[];mute.gain.value=0;sp.onaudioprocess=e=>{const d=e.inputBuffer.getChannelData(0);chunks.push(d.slice(0));let m=0;for(let i=0;i<d.length;i+=32)m=Math.max(m,Math.abs(d[i]));level&&level(m)};src.connect(sp);sp.connect(mute);mute.connect(c.destination);await new Promise(r=>setTimeout(r,ms));sp.disconnect();src.disconnect();mute.disconnect();this.close();const n=chunks.reduce((a,b)=>a+b.length,0);if(!n)return null;const b=c.createBuffer(1,n,c.sampleRate),o=b.getChannelData(0);let p=0,pk=.001;for(const x of chunks){o.set(x,p);p+=x.length}for(let i=0;i<n;i++)pk=Math.max(pk,Math.abs(o[i]));const k=Math.min(8,.9/pk);for(let i=0;i<n;i++)o[i]*=k;this.rec=b;return b},
+ play(){return new Promise(res=>{const c=Snd.ctx,b=this.rec;if(!b||!c){res(false);return}Snd.init();const s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.onended=()=>res(true);s.start()})}
+};
+const Ear={model:null,rec:null,node:null,src:null,ctx:null,
+ script(){return new Promise((ok,no)=>{if(window.Vosk){ok();return}const s=document.createElement('script');s.src='vosk/vosk.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)})},
+ async start(cb){await this.script();if(!this.model)this.model=await Vosk.createModel('vosk/model.tar.gz');const st=await Mic.open(),c=this.ctx=new(window.AudioContext||window.webkitAudioContext)();await c.resume();const r=this.rec=new this.model.KaldiRecognizer(c.sampleRate,JSON.stringify(['zapal','zgaś','[unk]']));r.on('result',m=>{const t=m.result&&m.result.text;if(t)cb(t)});const n=this.node=c.createScriptProcessor(4096,1,1),mute=c.createGain();mute.gain.value=0;n.onaudioprocess=e=>{try{r.acceptWaveform(e.inputBuffer)}catch(_){}};const s=this.src=c.createMediaStreamSource(st);s.connect(n);n.connect(mute);mute.connect(c.destination)},
+ stop(){try{this.src&&this.src.disconnect();this.node&&this.node.disconnect();this.rec&&this.rec.remove&&this.rec.remove();this.ctx&&this.ctx.close()}catch(_){}this.src=this.node=this.rec=this.ctx=null;Mic.close()}
+};

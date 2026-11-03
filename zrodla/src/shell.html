@@ -1,0 +1,55 @@
+<title>Elektronika z Leonem</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/*CSS*/
+</style>
+<div id="app">
+  <section id="map">
+    <div class="mapin">
+      <div class="maphead">
+        <div class="brand"><span id="brandmark"></span><div><h1>Elektronika z Leonem</h1><p>Prąd idzie po ścieżce. Każda lekcja zapala kolejny pad.</p></div></div>
+        <div class="headbtns"><button id="gonext" class="chipbtn go" type="button">Zaczynamy</button><button id="gofree" class="chipbtn" type="button">Plac zabaw</button><button id="dadmap" class="chipbtn" type="button">Dla taty</button></div>
+      </div>
+      <svg id="mapsvg" viewBox="0 0 1000 1120" role="img" aria-label="Mapa kursu: 23 lekcje połączone ścieżką na płytce"></svg>
+    </div>
+  </section>
+  <section id="lesson" hidden>
+    <header id="top">
+      <button id="home" class="rnd" type="button" aria-label="Mapa"></button>
+      <h2 id="ltitle"></h2>
+      <div id="ticks" aria-hidden="true"></div>
+      <button id="hand" class="rnd" type="button" aria-label="Ręka: przekładaj części"></button>
+      <button id="mute" class="rnd" type="button" aria-label="Głos"></button>
+      <button id="tata" type="button">Dla taty</button>
+    </header>
+    <div id="stagewrap">
+      <svg id="stage" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scena lekcji"></svg>
+      <div id="hud"></div>
+      <div id="card" hidden></div>
+      <div id="box" hidden></div>
+      <div id="rot" aria-hidden="true">Obróć telefon, będzie większe</div>
+    </div>
+    <footer id="dock">
+      <div id="iskra"></div>
+      <div id="sub"><p id="saytext" aria-live="polite"></p><div id="chips"></div></div>
+      <div id="nav">
+        <button id="prev" class="rnd" type="button" aria-label="Wstecz"></button>
+        <button id="again" class="rnd" type="button" aria-label="Powtórz"></button>
+        <button id="auto" class="rnd" type="button" aria-label="Oglądaj samo" aria-pressed="false"></button>
+        <button id="next" type="button" aria-label="Dalej"></button>
+      </div>
+    </footer>
+  </section>
+  <aside id="drawer" hidden>
+    <header><h2 id="dtitle">Dla taty</h2><button id="dclose" class="rnd" type="button" aria-label="Zamknij"></button></header>
+    <div id="dbody"></div>
+  </aside>
+  <div id="dip" hidden><div><h2>Brawo, Leon!</h2><p>Cały kurs zrobiony: 23 gwiazdki.</p><button id="dipclose" class="big sp" type="button">Na mapę</button></div></div>
+  <div id="fx"></div>
+</div>
+<script>
+/*JS*/
+</script>
